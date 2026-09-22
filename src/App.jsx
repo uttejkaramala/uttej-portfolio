@@ -207,7 +207,21 @@ function Project({ p, onOpen }) {
 export default function App() {
   const [lightbox, setLightbox] = useState(null);
   const [menu, setMenu] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const hero = useRef(null);
+  useEffect(() => {
+    const handleScroll = () => {
+      if (menuOpen) {
+        setMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [menuOpen]);
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       gsap.from(".hero-copy > *", {
@@ -248,14 +262,46 @@ export default function App() {
           <b>UK</b>
           <span>Uttej Karamala</span>
         </button>
-        <button className="mobile-menu" onClick={() => setMenu(!menu)}>
-          MENU
+        <button
+          className="mobile-menu"
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle menu"
+        >
+          {menuOpen ? "✕" : "☰"}
         </button>
-        <nav className={menu ? "open" : ""}>
-          <button onClick={() => go("work")}>Work</button>
-          <button onClick={() => go("about")}>About</button>
-          <button onClick={() => go("experience")}>Experience</button>
-          <button onClick={() => go("contact")}>Contact</button>
+        <nav className={menuOpen ? "open" : ""}>
+          <button
+            onClick={() => {
+              go("work");
+              setMenuOpen(false);
+            }}
+          >
+            Work
+          </button>
+          <button
+            onClick={() => {
+              go("about");
+              setMenuOpen(false);
+            }}
+          >
+            About
+          </button>
+          <button
+            onClick={() => {
+              go("experience");
+              setMenuOpen(false);
+            }}
+          >
+            Experience
+          </button>
+          <button
+            onClick={() => {
+              go("contact");
+              setMenuOpen(false);
+            }}
+          >
+            Contact
+          </button>
         </nav>
       </header>
       <main id="top">
